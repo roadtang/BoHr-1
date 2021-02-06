@@ -45,7 +45,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(MenuBar.class);
-    private static final String HELP_URL = "https://github.com/bohr/tree/master/docs";
+    private static final String HELP_URL = "https://github.com/BOHRweb";
 
     private final transient BohrGui gui;
     private final JFrame frame;
