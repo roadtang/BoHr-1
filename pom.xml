@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.bohr</groupId>
+    <artifactId>bohr</artifactId>
+    <version>1.0.0</version>
+    <modules>
+        <module>bohr-core</module>
+        <module>bohr-evm</module>
+    </modules>
+
+    <packaging>pom</packaging>
+    <description>BOHR is an experimental high-performance blockchain platform that powers decentralized application.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dist.phase>install</dist.phase>
+        <dist.base>${project.basedir}/dist</dist.base>
+        <dist.windowsExecutableVersion>${project.version}.0</dist.windowsExecutableVersion>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <skip.git.info>false</skip.git.info>
+    </properties>
+
+    <organization>
+        <name>BOHR Foundation</name>
+        <url>https://www.bohr.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>bintray</id>
+            <url>https://jcenter.bintray.com</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>org.bohr</groupId>
+                <artifactId>bohr-evm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+</project>

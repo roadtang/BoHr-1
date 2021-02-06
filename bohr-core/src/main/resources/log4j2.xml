@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configuration>
+<Configuration status="WARN" shutdownHook="disable">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %highlight{%-8level} %-16logger{0} %msg%n"/>
+        </Console>
+        <Async name="Async">
+            <AppenderRef ref="Console"/>
+            <LinkedTransferQueue />
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.bohr.api" level="DEBUG" />
+        <Logger name="org.bohr.core" level="DEBUG" />
+        <Logger name="org.bohr.consensus" level="DEBUG" />
+        <Logger name="org.bohr.db" level="DEBUG" />
+        <Logger name="org.bohr.net" level="DEBUG" />
+        <Logger name="org.bohr.vm" level="DEBUG" />
+        <Logger name="org.bohr.wrapper" level="DEBUG" />
+
+        <Logger name="io.netty" level="ERROR" />
+        <Logger name="oshi" level="DEBUG" />
+        <Logger name="io.swagger" level="ERROR" />
+
+        <Root level="DEBUG">
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,23 @@
+{
+    "number": 0,
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": 1608652800000,
+    "data": "bohr",
+    "premine": [{
+        "address": "0x13e2dacedee608cc4c41ea7a725dff0b8c932988",
+        "amount": 51000000000000,
+        "note": "bohr-community"
+    }],
+    "delegates": {
+        "EvgenyBogachev": "0x52ff19c9444d184ae76ee9caed4818629188eb30",
+        "Андрей": "0xe8f7ad4215cdb8f274378ebebb5c85b4f4803a48",
+        "Антон": "0x54c51c2f2880deba1cd375c1958f48582e687cce",
+        "ながさき": "0x4fff1347b5f183fec4e46cd073fd25e08b8cc4e9",
+        "한진희": "0x287408a2d4905ca280eb38a925e4ece443b9c937",
+        "Kevin Mitnick": "0xf277b85b3b5765b2ed147fc60554d59c078b8b86"
+    },
+    "config": {
+
+    }
+}
