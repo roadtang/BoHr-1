@@ -490,9 +490,8 @@ public class SwingUtil {
 	 * @return
 	 */
 	public static String formatTimestamp(long timestamp) {
-		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-		return format.format(new Date(timestamp));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		return sdf.format(new Date(timestamp));
 	}
 
 	public static String formatTimestamp1(long timestamp) {
