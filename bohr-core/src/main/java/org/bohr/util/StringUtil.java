@@ -33,6 +33,38 @@ public class StringUtil {
     private StringUtil() {
     }
 
+    //public static String Eth2TronAddress(String ethAddress)
+    //{
+    //    String fixaddress = "0x41" + ethAddress;
+    //    byte[] addressBytes = fixaddress.HexToByteArray();
+    //    byte[] hash0 = SHA256(addressBytes);
+    //    byte[] hash1 = SHA256(hash0);
+    //    var checkSum = hash1.Take(4).ToArray();
+    //    return Base58.Encode(addressBytes.Concat(checkSum).ToArray());
+    //}
+    //
+    //private static byte[] SHA256(byte[] data)
+    //{
+    //    using (var sha256 = new SHA256Managed())
+    //    {
+    //        return sha256.ComputeHash(data);
+    //    }
+    //}
+    //
+    //public static string Tron2EthAddress(string tronAddress)
+    //{
+    //
+    //    var HexString = Base58.Decode(tronAddress).ToHexString();
+    //    string address = "0x" + HexString.Substring(2, 40);
+    //    var result = Nethereum.Util.AddressExtensions.ConvertToEthereumChecksumAddress(address);
+    //    return result;
+    //}
+
+
+
+
+
+
     public static byte[] decodeFromBase58Check(String addressBase58) {
         if (StringUtils.isEmpty(addressBase58)) {
             System.out.println("Warning: Address is empty !!");
@@ -90,6 +122,11 @@ public class StringUtil {
         return true;
     }
 
+    public static byte getAddressPreFixByte() {
+        return CommonConstant.ADD_PRE_FIX_BYTE_MAINNET;
+    }
+
+
     public static String encode58Check(byte[] input) {
         byte[] hash0 = Sha256Sm3Hash.hash(input);
         byte[] hash1 = Sha256Sm3Hash.hash(hash0);
@@ -137,12 +174,5 @@ public class StringUtil {
         return "";
     }
 
-    public static void main(String args[]){
-        String address1 = base58ToHex("BfE6DueEe6FaNqztNHHWm9fUQm9SjrFaLeX");
-        System.out.println(address1);
 
-        String address2 = hexToBase58("0x000000000000000000000000000000000000dead");
-        System.out.println(address2);
-
-    }
 }

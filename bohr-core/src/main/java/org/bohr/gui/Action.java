@@ -1,0 +1,87 @@
+/**
+ * Copyright (c) 2019 The Bohr Developers
+ *
+ * Distributed under the MIT software license, see the accompanying file
+ * LICENSE or https://opensource.org/licenses/mit-license.php
+ */
+package org.bohr.gui;
+
+public enum Action {
+    CREATE_ACCOUNT,
+
+    RECOVER_ACCOUNTS,
+
+    RESET_MNEMONIC,
+
+    SCAN_HD_WALLETS,
+
+    OK,
+
+    CANCEL,
+
+    SHOW_HOME,
+
+    SHOW_SEND,
+
+    SHOW_RECEIVE,
+
+    SHOW_CONTRACT,
+
+    SHOW_TRANSACTIONS,
+
+    SHOW_DELEGATES,
+
+    LOCK,
+
+    SEND,
+
+    CLEAR,
+
+    COPY_ADDRESS,
+
+    NEW_ACCOUNT,
+
+    DELETE_ACCOUNT,
+
+    VOTE,
+
+    UNVOTE,
+
+    DELEGATE,
+
+    REFRESH,
+
+    SELECT_ACCOUNT,
+
+    SELECT_DELEGATE,
+
+    BACKUP_WALLET,
+
+    CHANGE_PASSWORD,
+
+    EXIT,
+
+    ABOUT,
+
+    CONSOLE,
+
+    API_EXPLORER,
+
+    HELP,
+
+    SHOW_ADDRESS_BOOK,
+
+    ADD_ADDRESS,
+
+    EDIT_ADDRESS,
+
+    DELETE_ADDRESS,
+
+    IMPORT_PRIVATE_KEY,
+
+    EXPORT_PRIVATE_KEY,
+
+    COPY_PRIVATE_KEY,
+
+    SHOW_TRANSACTION_RESULT
+}

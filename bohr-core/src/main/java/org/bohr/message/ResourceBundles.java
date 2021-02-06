@@ -33,9 +33,9 @@ public enum ResourceBundles {
 	}
 
 	public static ResourceBundle getDefaultBundle(ResourceBundles bundleName) {
-		ResourceBundle defaultBundle = ResourceBundle.getBundle(bundleName.getBundleName(), Locale.getDefault());
-		return defaultBundle == null ? ResourceBundle.getBundle(bundleName.getBundleName(), Locale.ENGLISH)
-				: defaultBundle;
+
+		return ResourceBundle.getBundle(bundleName.getBundleName(), Locale.ENGLISH);
+
 	}
 
 	@Override

@@ -223,60 +223,60 @@
             </plugin>
 
             <!-- build windows executable (currently GUI mode only) -->
-<!--            <plugin>-->
-<!--                <groupId>com.akathist.maven.plugins.launch4j</groupId>-->
-<!--                <artifactId>launch4j-maven-plugin</artifactId>-->
-<!--                <version>1.7.25</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>bohr</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>launch4j</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <headerType>gui</headerType>-->
-<!--                            <jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>-->
-<!--                            <outfile>${project.build.directory}/bohr.exe</outfile>-->
-<!--                            <downloadUrl>http://www.oracle.com/technetwork/java/javase/downloads/index.html</downloadUrl>-->
-<!--                            <classPath>-->
-<!--                                <mainClass>org.bohr.gui.BohrGui</mainClass>-->
-<!--                                <preCp>anything</preCp>-->
-<!--                            </classPath>-->
-<!--                            <icon>src/main/resources/org/bohr/gui/logo.ico</icon>-->
-<!--                            <splash>-->
-<!--                                &lt;!&ndash; this file must be a 24-bit BMP &ndash;&gt;-->
-<!--                                <file>misc/design/splash.bmp</file>-->
-<!--                                <waitForWindow>true</waitForWindow>-->
-<!--                                <timeout>600</timeout>-->
-<!--                                <timeoutErr>true</timeoutErr>-->
-<!--                            </splash>-->
-<!--                            <jre>-->
-<!--                                <minVersion>1.8.0</minVersion>-->
-<!--                                <jdkPreference>preferJre</jdkPreference>-->
-<!--                                <maxHeapPercent>80</maxHeapPercent>-->
-<!--                                <opts>-->
-<!--                                    <opt>-Dfile.encoding=UTF-8</opt>-->
-<!--                                </opts>-->
-<!--                            </jre>-->
-<!--                            <versionInfo>-->
-<!--                                <fileVersion>${dist.windowsExecutableVersion}</fileVersion>-->
-<!--                                <fileDescription>${project.description}</fileDescription>-->
-<!--                                <txtFileVersion>${project.version}</txtFileVersion>-->
-<!--                                <copyright>MIT</copyright>-->
-<!--                                <productVersion>${dist.windowsExecutableVersion}</productVersion>-->
-<!--                                <txtProductVersion>${project.version}</txtProductVersion>-->
-<!--                                <productName>bohr</productName>-->
-<!--                                <internalName>bohr</internalName>-->
-<!--                                <originalFilename>bohr.exe</originalFilename>-->
-<!--                            </versionInfo>-->
-<!--                            <singleInstance>-->
-<!--                                <mutexName>bohr</mutexName>-->
-<!--                            </singleInstance>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.25</version>
+                <executions>
+                    <execution>
+                        <id>bohr</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>
+                            <outfile>${project.build.directory}/bohr.exe</outfile>
+                            <downloadUrl>http://www.oracle.com/technetwork/java/javase/downloads/index.html</downloadUrl>
+                            <classPath>
+                                <mainClass>org.bohr.gui.BohrGui</mainClass>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <icon>src/main/resources/org/bohr/gui/logo.ico</icon>
+                            <splash>
+                                <!-- this file must be a 24-bit BMP -->
+                                <file>misc/design/splash.bmp</file>
+                                <waitForWindow>true</waitForWindow>
+                                <timeout>600</timeout>
+                                <timeoutErr>true</timeoutErr>
+                            </splash>
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                                <jdkPreference>preferJre</jdkPreference>
+                                <maxHeapPercent>80</maxHeapPercent>
+                                <opts>
+                                    <opt>-Dfile.encoding=UTF-8</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>${dist.windowsExecutableVersion}</fileVersion>
+                                <fileDescription>${project.description}</fileDescription>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <copyright>MIT</copyright>
+                                <productVersion>${dist.windowsExecutableVersion}</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>bohr</productName>
+                                <internalName>bohr</internalName>
+                                <originalFilename>bohr.exe</originalFilename>
+                            </versionInfo>
+                            <singleInstance>
+                                <mutexName>bohr</mutexName>
+                            </singleInstance>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- prepare distribution -->
             <plugin>
@@ -327,8 +327,10 @@
                                         <include name="bohr.exe" />
                                     </fileset>
                                 </copy>
+                                <copy file="${project.basedir}/src/main/resources/org/bohr/gui/splash.png" todir="${dist.base}/windows/resources" />
                                 <copy file="${project.basedir}/target/bohr-${project.version}-shaded.jar" tofile="${dist.base}/windows/bohr.jar" />
                                 <copy file="${project.basedir}/scripts/bohr-cli.bat" tofile="${dist.base}/windows/bohr-cli.bat" />
+                                <copy file="${project.basedir}/scripts/bohr-gui.bat" tofile="${dist.base}/windows/bohr-gui.bat" />
                                 <fixcrlf srcdir="${dist.base}/windows" includes="**/*.ini" eol="dos" eof="asis" />
                                 <fixcrlf srcdir="${dist.base}/windows" includes="config/*" eol="dos" eof="asis" />
                                 <fixcrlf srcdir="${dist.base}/windows" includes="LICENSE*" eol="dos" eof="asis" />
@@ -340,8 +342,10 @@
                                         <include name="LICENSE*" />
                                     </fileset>
                                 </copy>
+                                <copy file="${project.basedir}/src/main/resources/org/bohr/gui/splash.png" todir="${dist.base}/linux/resources" />
                                 <copy file="${project.basedir}/target/bohr-${project.version}-shaded.jar" tofile="${dist.base}/linux/bohr.jar" />
                                 <copy file="${project.basedir}/scripts/bohr-cli.sh" tofile="${dist.base}/linux/bohr-cli.sh" />
+                                <copy file="${project.basedir}/scripts/bohr-gui.sh" tofile="${dist.base}/linux/bohr-gui.sh" />
                                 <chmod file="${dist.base}/linux/bohr.jar" perm="755" />
                                 <chmod file="${dist.base}/linux/bohr*.sh" perm="755" />
                                 <chmod dir="${dist.base}/linux/config" perm="700" />
@@ -354,8 +358,10 @@
                                         <include name="LICENSE*" />
                                     </fileset>
                                 </copy>
+                                <copy file="${project.basedir}/src/main/resources/org/bohr/gui/splash.png" todir="${dist.base}/macos/resources" />
                                 <copy file="${project.basedir}/target/bohr-${project.version}-shaded.jar" tofile="${dist.base}/macos/bohr.jar" />
                                 <copy file="${project.basedir}/scripts/bohr-cli.sh" tofile="${dist.base}/macos/bohr-cli.sh" />
+                                <copy file="${project.basedir}/scripts/bohr-gui.sh" tofile="${dist.base}/macos/bohr-gui.sh" />
                                 <chmod file="${dist.base}/macos/bohr.jar" perm="755" />
                                 <chmod file="${dist.base}/macos/bohr*.sh" perm="755" />
                                 <chmod dir="${dist.base}/macos/config" perm="700" />

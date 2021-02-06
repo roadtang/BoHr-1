@@ -18,6 +18,7 @@ import java.nio.file.FileSystems;
 import java.util.Locale;
 
 import org.bohr.config.Constants;
+import org.bohr.gui.BohrGui;
 import org.bohr.util.exception.UnreachableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -294,7 +295,15 @@ public class SystemUtil {
      * @return
      */
     public static Object getImplementationVersion() {
-        version = "2.4.0";
+        if (version == null) {
+            try {
+                version = IOUtil.readStreamAsString(BohrGui.class.getClassLoader().getResourceAsStream("VERSION"))
+                        .trim();
+            } catch (IOException ex) {
+                logger.info("Failed to read version.");
+                version = "unknown";
+            }
+        }
 
         return version;
     }

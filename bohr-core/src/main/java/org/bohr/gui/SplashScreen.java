@@ -1,0 +1,177 @@
+/**
+ * Copyright (c) 2019 The Bohr Developers
+ *
+ * Distributed under the MIT software license, see the accompanying file
+ * LICENSE or https://opensource.org/licenses/mit-license.php
+ */
+package org.bohr.gui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.WindowConstants;
+
+import org.bohr.core.event.BlockchainDatabaseUpgradingEvent;
+import org.bohr.core.event.WalletLoadingEvent;
+import org.bohr.event.KernelBootingEvent;
+import org.bohr.event.PubSub;
+import org.bohr.event.PubSubEvent;
+import org.bohr.event.PubSubFactory;
+import org.bohr.event.PubSubSubscriber;
+import org.bohr.gui.event.MainFrameStartedEvent;
+import org.bohr.gui.event.WalletSelectionDialogShownEvent;
+import org.bohr.message.GuiMessages;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * This splash screen fills the empty between startup dialog and
+ * {@link MainFrame}.
+ */
+public class SplashScreen extends JFrame implements PubSubSubscriber {
+
+    private static final long serialVersionUID = 1;
+
+    private static final Logger logger = LoggerFactory.getLogger(SplashScreen.class);
+
+    private static final PubSub pubSub = PubSubFactory.getDefault();
+
+    private final JProgressBar progressBar;
+
+    public SplashScreen() {
+        subscribeEvents();
+
+        setTitle(GuiMessages.get("BohrWallet"));
+        setIconImage(SwingUtil.loadImage("logo", 128, 128).getImage());
+        setUndecorated(true);
+        setContentPane(new ContentPane());
+        setBackground(new Color(0, 0, 0, 0));
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        add(new ImagePane());
+
+        progressBar = SwingUtil.createMetalProgressBar();
+        progressBar.setBorderPainted(false);
+        progressBar.setStringPainted(true);
+        progressBar.setIndeterminate(true);
+        progressBar.setString(GuiMessages.get("SplashLoading"));
+        getContentPane().add(progressBar, BorderLayout.SOUTH);
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    private void subscribeEvents() {
+        pubSub.subscribe(
+                this,
+                WalletLoadingEvent.class,
+                WalletSelectionDialogShownEvent.class,
+                KernelBootingEvent.class,
+                MainFrameStartedEvent.class,
+                BlockchainDatabaseUpgradingEvent.class);
+    }
+
+    @Override
+    public void onPubSubEvent(final PubSubEvent event) {
+        if (event instanceof WalletLoadingEvent) {
+            EventQueue.invokeLater(() -> {
+                showSplash();
+                progressBar.setString(GuiMessages.get("SplashLoadingWallet"));
+            });
+        } else if (event instanceof WalletSelectionDialogShownEvent) {
+            EventQueue.invokeLater(this::hideSplash);
+        } else if (event instanceof KernelBootingEvent) {
+            EventQueue.invokeLater(() -> {
+                showSplash();
+                progressBar.setString(GuiMessages.get("SplashStartingKernel"));
+            });
+        } else if (event instanceof MainFrameStartedEvent) {
+            EventQueue.invokeLater(this::destroySplash);
+        } else if (event instanceof BlockchainDatabaseUpgradingEvent) {
+            EventQueue.invokeLater(() -> {
+                BlockchainDatabaseUpgradingEvent e = (BlockchainDatabaseUpgradingEvent) event;
+                progressBar.setString(GuiMessages.get("SplashUpgradingDatabase", e.loaded, e.total));
+                progressBar.setIndeterminate(false);
+                progressBar.setMaximum(10000);
+                progressBar.setValue((int) ((double) e.loaded / (double) e.total * 10000));
+            });
+        }
+    }
+
+    private void hideSplash() {
+        setVisible(false);
+        revalidate();
+        repaint();
+    }
+
+    private void showSplash() {
+        setVisible(true);
+        revalidate();
+        repaint();
+    }
+
+    private void destroySplash() {
+        pubSub.unsubscribeAll(this);
+        setVisible(false);
+        dispose();
+    }
+
+    private class ContentPane extends JPanel {
+
+        private static final long serialVersionUID = 1;
+
+        private ContentPane() {
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(new Color(0, 0, 0, 0));
+            g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        }
+    }
+
+    private class ImagePane extends JPanel {
+
+        private static final long serialVersionUID = 1;
+
+        private transient BufferedImage backgroundImage;
+
+        private ImagePane() {
+            setOpaque(false);
+            try {
+                backgroundImage = ImageIO.read(SplashScreen.class.getResource("splash.png"));
+            } catch (IOException e) {
+                logger.error("Unable to load splash.png", e);
+            }
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(backgroundImage.getWidth(), backgroundImage.getHeight());
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                int x = (getWidth() - backgroundImage.getWidth()) / 2;
+                int y = (getHeight() - backgroundImage.getHeight()) / 2;
+                g2d.drawImage(backgroundImage, x, y, this);
+                g2d.dispose();
+            }
+        }
+    }
+}
