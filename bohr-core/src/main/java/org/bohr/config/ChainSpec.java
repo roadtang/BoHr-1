@@ -65,6 +65,15 @@ public interface ChainSpec {
     Amount getBlockReward(long number);
 
     /**
+     * Returns the daily reward for a specific block.
+     *
+     * @param number
+     *            block number
+     * @return the daily reward
+     */
+    Amount getDailyReward(long number);
+
+    /**
      * Returns the validator update rate.
      *
      * @return

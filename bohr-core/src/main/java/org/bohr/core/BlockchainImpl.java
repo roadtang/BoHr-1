@@ -367,7 +367,7 @@ public class BlockchainImpl implements Blockchain {
         List<Transaction> txs = block.getTransactions();
         Pair<byte[], List<Integer>> transactionIndices = block.getEncodedTransactionsAndIndices();
         Pair<byte[], List<Integer>> resultIndices = block.getEncodedResultsAndIndices();
-        Amount feeReward = Block.getFeeReward(block);
+        Amount blockReward = Block.getBlockReward(block, config);
 
         for (int i = 0; i < txs.size(); i++) {
             Transaction tx = txs.get(i);
@@ -397,7 +397,7 @@ public class BlockchainImpl implements Blockchain {
             Transaction tx = new Transaction(config.network(),
                     TransactionType.COINBASE,
                     block.getCoinbase(),
-                    feeReward,
+                    blockReward,
                     Amount.ZERO,
                     block.getNumber(),
                     block.getTimestamp(),
@@ -407,22 +407,22 @@ public class BlockchainImpl implements Blockchain {
             indexDB.put(Bytes.merge(TYPE_BLOCK_COINBASE_BY_NUMBER, Bytes.of(block.getNumber())), tx.getHash());
             addTransactionToAccount(tx, block.getCoinbase());
 
-            //[5] coinbase block reward transaction , per 28800 generate
-            Amount blockReward = Block.getBlockReward(block, config);
-            if (blockReward.isPositive()) {
-                Transaction blockRewardTx = new Transaction(config.network(),
+            //[5] coinbase daily reward transaction , per 17000 generate
+            Amount dailyReward = Block.getDailyReward(block, config);
+            if (dailyReward.isPositive()) {
+                Transaction dailyRewardTx = new Transaction(config.network(),
                         TransactionType.REWARD,
                         Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS,
-                        blockReward,
+                        dailyReward,
                         Amount.ZERO,
                         block.getNumber(),
                         block.getTimestamp(),
                         Bytes.EMPTY_BYTES);
 
-                blockRewardTx.sign(Constants.COINBASE_KEY);
-                indexDB.put(Bytes.merge(TYPE_TRANSACTION_INDEX_BY_HASH, blockRewardTx.getHash()), blockRewardTx.toBytes());
-                indexDB.put(Bytes.merge(TYPE_BLOCK_COINBASE_REWARD_BY_NUMBER, Bytes.of(block.getNumber())), blockRewardTx.getHash());
-                addTransactionToAccount(blockRewardTx, Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS);
+                dailyRewardTx.sign(Constants.COINBASE_KEY);
+                indexDB.put(Bytes.merge(TYPE_TRANSACTION_INDEX_BY_HASH, dailyRewardTx.getHash()), dailyRewardTx.toBytes());
+                indexDB.put(Bytes.merge(TYPE_BLOCK_COINBASE_REWARD_BY_NUMBER, Bytes.of(block.getNumber())), dailyRewardTx.getHash());
+                addTransactionToAccount(dailyRewardTx, Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS);
             }
 
             // [6] update validator statistics
@@ -885,17 +885,17 @@ public class BlockchainImpl implements Blockchain {
     }
 
     protected boolean applyBlock(Block block, AccountState asTrack, DelegateState dsTrack) {
-        // [5] apply tx fees
-        Amount feeReward = Block.getFeeReward(block);
+        // [5] apply tx fees & block reward
+        Amount blockReward = Block.getBlockReward(block, config);
 
-        if (feeReward.isPositive()) {
-            asTrack.adjustAvailable(block.getCoinbase(), feeReward);
+        if (blockReward.isPositive()) {
+            asTrack.adjustAvailable(block.getCoinbase(), blockReward);
         }
 
-        // [6] apply tx block reward
-        Amount blockReward = Block.getBlockReward(block, config);
-        if (blockReward.isPositive()) {
-            asTrack.adjustAvailable(Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS, blockReward);
+        // [6] apply tx daily reward
+        Amount dailyReward = Block.getDailyReward(block, config);
+        if (dailyReward.isPositive()) {
+            asTrack.adjustAvailable(Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS, dailyReward);
         }
 
         // [7] commit the updates

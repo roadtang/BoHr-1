@@ -225,16 +225,17 @@ public class Block {
         return rootMatches;
     }
 
-    //get fee total reward
-    public static Amount getFeeReward(Block block) {
+    //get fee & block total reward
+    public static Amount getBlockReward(Block block, Config config) {
         Amount txsReward = block.getTransactions().stream().map(Transaction::getFee).reduce(ZERO, Amount::sum);
         Amount gasReward = getGasReward(block);
 
-        return txsReward.add(gasReward);
+        return config.spec().getBlockReward(block.getNumber()).add(txsReward).add(gasReward);
     }
 
-    public static Amount getBlockReward(Block block, Config config) {
-        return config.spec().getBlockReward(block.getNumber());
+    //get daily reward
+    public static Amount getDailyReward(Block block, Config config) {
+        return config.spec().getDailyReward(block.getNumber());
     }
 
     /**

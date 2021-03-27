@@ -6,16 +6,6 @@
  */
 package org.bohr.core.state;
 
-import static org.bohr.core.Amount.ZERO;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.bohr.core.Amount;
 import org.bohr.core.Blockchain;
 import org.bohr.db.Database;
@@ -24,6 +14,12 @@ import org.bohr.util.Bytes;
 import org.bohr.util.ClosableIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.bohr.core.Amount.ZERO;
 
 /**
  * Delegate state implementation.
@@ -88,7 +84,8 @@ public class DelegateStateImpl implements Cloneable, DelegateState {
 
     @Override
     public boolean register(byte[] address, byte[] name, long registeredAt) {
-        if (getDelegateByAddress(address) != null || getDelegateByName(name) != null) {
+        //name != address && address not exist && name not exist
+        if (getDelegateByAddress(address) != null || getDelegateByName(name) != null || ByteArray.of(name).equals(ByteArray.of(address))) {
             return false;
         } else {
             Delegate d = new Delegate(address, name, registeredAt, ZERO);
@@ -275,9 +272,10 @@ public class DelegateStateImpl implements Cloneable, DelegateState {
             ClosableIterator<Entry<byte[], byte[]>> itr = delegateDB.iterator();
             while (itr.hasNext()) {
                 Entry<byte[], byte[]> entry = itr.next();
-                ByteArray k = ByteArray.of(entry.getKey());
-                byte[] v = entry.getValue();
+                ByteArray k = ByteArray.of(entry.getKey()); //name or address
+                byte[] v = entry.getValue();                //address or delegate
 
+                //key is address: length = 20 && value length != 20
                 if (k.length() == ADDRESS_LEN && !map.containsKey(k) && v.length != ADDRESS_LEN) {
                     map.put(k, Delegate.fromBytes(k.getData(), v));
                 }

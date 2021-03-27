@@ -212,31 +212,65 @@ public abstract class AbstractConfig implements Config, ChainSpec {
 
     @Override
     public Amount getBlockReward(long number) {
+        if (number < 1619189) {
+            return Amount.ZERO;
+        } else {
+            if (number <= 5635000) {
+                return Amount.of(7407, MILLI_BOHR);
+            } else if (number <= 11270000) {
+                return Amount.of(3704, MILLI_BOHR);
+            } else if (number <= 16905000) {
+                return Amount.of(1852, MILLI_BOHR);
+            } else if (number <= 22540000) {
+                return Amount.of(926, MILLI_BOHR);
+            } else if (number <= 28175000) {
+                return Amount.of(463, MILLI_BOHR);
+            } else if (number <= 33810000) {
+                return Amount.of(231, MILLI_BOHR);
+            } else if (number <= 39445000) {
+                return Amount.of(116, MILLI_BOHR);
+            } else if (number <= 45080000) {
+                return Amount.of(58, MILLI_BOHR);
+            } else if (number <= 55016500) {
+                return Amount.of(29, MILLI_BOHR);
+            } else if (number <= 58963500) {
+                return Amount.of(14, MILLI_BOHR);
+            } else {
+                return Amount.of(13, MILLI_BOHR);
+            }
+        }
+    }
 
+    @Override
+    public Amount getDailyReward(long number) {
         long i = number % 17000;
         if (i == 0) {
-            if (number <= 5635000) {
+            if (number < 1619189) {
                 return Amount.of(1280000, BOHR);
-            } else if (number <= 11270000) {
-                return Amount.of(640000, BOHR);
-            } else if (number <= 16905000) {
-                return Amount.of(320000, BOHR);
-            } else if (number <= 22540000) {
-                return Amount.of(160000, BOHR);
-            } else if (number <= 28175000) {
-                return Amount.of(80000, BOHR);
-            } else if (number <= 33810000) {
-                return Amount.of(40000, BOHR);
-            } else if (number <= 39445000) {
-                return Amount.of(20000, BOHR);
-            } else if (number <= 45080000) {
-                return Amount.of(10000, BOHR);
-            } else if (number <= 55016500) {
-                return Amount.of(5000, BOHR);
-            } else if (number <= 58963500) {
-                return Amount.of(2500, BOHR);
-            } else {
-                return Amount.of(2288, BOHR);
+            }else {
+                if (number <= 5635000) {
+                    return Amount.of(1152000, BOHR);
+                } else if (number <= 11270000) {
+                    return Amount.of(576000, BOHR);
+                } else if (number <= 16905000) {
+                    return Amount.of(288000, BOHR);
+                } else if (number <= 22540000) {
+                    return Amount.of(144000, BOHR);
+                } else if (number <= 28175000) {
+                    return Amount.of(72000, BOHR);
+                } else if (number <= 33810000) {
+                    return Amount.of(36000, BOHR);
+                } else if (number <= 39445000) {
+                    return Amount.of(18000, BOHR);
+                } else if (number <= 45080000) {
+                    return Amount.of(9000, BOHR);
+                } else if (number <= 55016500) {
+                    return Amount.of(4500, BOHR);
+                } else if (number <= 58963500) {
+                    return Amount.of(2250, BOHR);
+                } else {
+                    return Amount.of(2059200, MILLI_BOHR);
+                }
             }
         } else {
             return Amount.ZERO;
@@ -250,7 +284,11 @@ public abstract class AbstractConfig implements Config, ChainSpec {
 
     @Override
     public int getNumberOfValidators(long number) {
-        return 6;
+        if (number < 1619189) {
+            return 6;
+        } else {
+            return 51;
+        }
     }
 
     @Override
