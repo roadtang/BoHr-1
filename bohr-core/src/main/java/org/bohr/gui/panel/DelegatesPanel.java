@@ -46,6 +46,7 @@ import javax.swing.table.TableRowSorter;
 import org.bohr.Kernel;
 import org.bohr.Network;
 import org.bohr.config.Config;
+import org.bohr.config.Constants;
 import org.bohr.core.Amount;
 import org.bohr.core.Blockchain;
 import org.bohr.core.BlockchainImpl.ValidatorStats;
@@ -54,16 +55,9 @@ import org.bohr.core.Transaction;
 import org.bohr.core.TransactionType;
 import org.bohr.core.state.Delegate;
 import org.bohr.core.state.DelegateState;
-import org.bohr.gui.Action;
-import org.bohr.gui.BohrGui;
-import org.bohr.gui.SwingUtil;
-import org.bohr.gui.TransactionSender;
+import org.bohr.gui.*;
 import org.bohr.gui.dialog.DelegateDialog;
-import org.bohr.gui.laf.DefaultComboBoxUI;
-import org.bohr.gui.laf.HalfButtonUI;
-import org.bohr.gui.laf.HalfTextFieldUI;
-import org.bohr.gui.laf.TableHeadRender;
-import org.bohr.gui.laf.TableRender;
+import org.bohr.gui.laf.*;
 import org.bohr.gui.layout.TableLayout;
 import org.bohr.gui.model.WalletAccount;
 import org.bohr.gui.model.WalletDelegate;
@@ -273,6 +267,34 @@ public class DelegatesPanel extends JPanel implements ActionListener {
 
 		panel.add(getNotePanel(), "1,9");
 
+		JLabel regLabel = new JLabel(GuiMessages.get("RegisterAsDelegate"));
+		regLabel.setForeground(new Color(0xffffff));
+		regLabel.setHorizontalAlignment(JLabel.LEFT);
+		FontUtils.setBOLDFont(regLabel, 16);
+		panel.add(regLabel, "1,11");
+
+		textName = SwingUtil.textFieldWithCopyPastePopup();
+
+		textName.setToolTipText(GuiMessages.get("DelegateName"));
+		textName.setName("textName");
+
+		textName.setColumns(10);
+		textName.setActionCommand(Action.DELEGATE.name());
+		textName.addActionListener(this);
+
+		new PlaceHolder(GuiMessages.get("DelegateName"), textName);
+
+		textName.setUI(new DefaultTextFieldUI());
+		panel.add(textName, "1,13");
+
+		JButton btnDelegate = SwingUtil.createDefaultButton(GuiMessages.get("reg"), this, Action.DELEGATE);
+		btnDelegate.setName("btnDelegate");
+		btnDelegate.setToolTipText(GuiMessages.get("RegisterAsDelegateToolTip",
+				SwingUtil.formatAmount(config.spec().minDelegateBurnAmount())));
+		btnDelegate.setUI(new RoundRectButtonUI(new Color(0xffad00)));
+
+		panel.add(btnDelegate, "1,15");
+
 		return panel;
 	}
 
@@ -433,7 +455,7 @@ public class DelegatesPanel extends JPanel implements ActionListener {
 				voteOrUnvote(action);
 			break;
 		case DELEGATE:
-			//	delegate();
+			delegate();
 			break;
 		default:
 			throw new UnreachableException();
@@ -602,7 +624,7 @@ public class DelegatesPanel extends JPanel implements ActionListener {
 		}
 		//
 		else if (
-				!name.matches("[_a-z0-9]{3,16}")
+				!name.matches("[_a-z0-9A-Z]{3,16}")
 		) {
 			JOptionPane.showMessageDialog(this, GuiMessages.get("AccountNameError"));
 		} else if (a.getAvailable()
@@ -641,14 +663,14 @@ public class DelegatesPanel extends JPanel implements ActionListener {
 				return;
 			}
 
-			//TransactionType type = TransactionType.DELEGATE;
-			//byte[] to = Constants.DELEGATE_BURN_ADDRESS;
-			//Amount value = config.spec().minDelegateBurnAmount();
-			//Amount fee = config.spec().minTransactionFee();
-			//byte[] data = Bytes.of(name);
-			//
-			//PendingManager.ProcessingResult result = TransactionSender.send(kernel, a, type, to, value, fee, data);
-			//handleTransactionResult(result);
+			TransactionType type = TransactionType.DELEGATE;
+			byte[] to = Constants.DELEGATE_BURN_ADDRESS;
+			Amount value = config.spec().minDelegateBurnAmount();
+			Amount fee = config.spec().minTransactionFee();
+			byte[] data = Bytes.of(name);
+
+			PendingManager.ProcessingResult result = TransactionSender.send(kernel, a, type, to, value, fee, data);
+			handleTransactionResult(result);
 		}
 	}
 

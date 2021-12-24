@@ -96,7 +96,7 @@ public class Kernel {
 
     /**
      * Creates a kernel instance and initializes it.
-     * 
+     *
      * @param config
      *            the config instance
      * @prarm genesis the genesis instance
@@ -219,8 +219,8 @@ public class Kernel {
             logger.info("Memory: total = {} MB, available = {} MB, swap total = {} MB, swap available = {} MB",
                     m.getTotal() / mb,
                     m.getAvailable() / mb,
-                    m.getSwapTotal() / mb,
-                    (m.getSwapTotal() - m.getSwapUsed()) / mb);
+                    m.getVirtualMemory().getSwapTotal() / mb,
+                    (m.getVirtualMemory().getSwapTotal() - m.getVirtualMemory().getSwapUsed()) / mb);
 
             // disk
             for (HWDiskStore disk : hal.getDiskStores()) {
@@ -319,7 +319,7 @@ public class Kernel {
 
     /**
      * Returns the wallet.
-     * 
+     *
      * @return
      */
     public Wallet getWallet() {
@@ -328,7 +328,7 @@ public class Kernel {
 
     /**
      * Returns the coinbase.
-     * 
+     *
      * @return
      */
     public Key getCoinbase() {
@@ -337,7 +337,7 @@ public class Kernel {
 
     /**
      * Returns the blockchain.
-     * 
+     *
      * @return
      */
     public Blockchain getBlockchain() {
@@ -346,7 +346,7 @@ public class Kernel {
 
     /**
      * Returns the peer client.
-     * 
+     *
      * @return
      */
     public PeerClient getClient() {
@@ -355,7 +355,7 @@ public class Kernel {
 
     /**
      * Returns the pending manager.
-     * 
+     *
      * @return
      */
     public PendingManager getPendingManager() {
@@ -364,7 +364,7 @@ public class Kernel {
 
     /**
      * Returns the channel manager.
-     * 
+     *
      * @return
      */
     public ChannelManager getChannelManager() {
@@ -373,7 +373,7 @@ public class Kernel {
 
     /**
      * Returns the node manager.
-     * 
+     *
      * @return
      */
     public NodeManager getNodeManager() {
@@ -382,7 +382,7 @@ public class Kernel {
 
     /**
      * Returns the config.
-     * 
+     *
      * @return
      */
     public Config getConfig() {
@@ -391,7 +391,7 @@ public class Kernel {
 
     /**
      * Returns the syncing manager.
-     * 
+     *
      * @return
      */
     public SyncManager getSyncManager() {
@@ -400,7 +400,7 @@ public class Kernel {
 
     /**
      * Returns the BFT manager.
-     * 
+     *
      * @return
      */
     public BftManager getBftManager() {
