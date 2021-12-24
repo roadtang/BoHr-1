@@ -562,7 +562,7 @@ public class SendPanel extends JPanel implements ActionListener {
 	 */
 	protected void handleTransactionResult(PendingManager.ProcessingResult result) {
 		if (result.error == null) {
-			JOptionPane.showMessageDialog(this, GuiMessages.get("TransactionSent", 3),
+			JOptionPane.showMessageDialog(this, GuiMessages.get("TransactionSent", 5),
 					GuiMessages.get("SuccessDialogTitle"), JOptionPane.INFORMATION_MESSAGE);
 			clear();
 		} else {
