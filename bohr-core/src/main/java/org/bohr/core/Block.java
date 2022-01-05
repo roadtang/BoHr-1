@@ -227,10 +227,26 @@ public class Block {
 
     //get fee & block total reward
     public static Amount getBlockReward(Block block, Config config) {
+        if (block.getNumber() < 6500000) {
+            Amount txsReward = block.getTransactions().stream().map(Transaction::getFee).reduce(ZERO, Amount::sum);
+            Amount gasReward = getGasReward(block);
+
+            return config.spec().getBlockReward(block.getNumber()).add(txsReward).add(gasReward);
+        }
+
+        return config.spec().getBlockReward(block.getNumber());
+    }
+
+    //get transfer fee & contract gas fee
+    public static Amount getBlockFee(Block block, Config config) {
+        if (block.getNumber() < 6500000) {
+            return ZERO;
+        }
+
         Amount txsReward = block.getTransactions().stream().map(Transaction::getFee).reduce(ZERO, Amount::sum);
         Amount gasReward = getGasReward(block);
 
-        return config.spec().getBlockReward(block.getNumber()).add(txsReward).add(gasReward);
+        return txsReward.add(gasReward);
     }
 
     //get daily reward

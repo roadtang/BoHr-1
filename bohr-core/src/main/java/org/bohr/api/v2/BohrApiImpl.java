@@ -340,7 +340,7 @@ public final class BohrApiImpl implements BohrApi {
 
             GetBlockResponse resp = new GetBlockResponse();
             resp.setResult(
-                    TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber())));
+                    TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber()), kernel.getBlockchain().getBurnTransaction(block.getNumber())));
             return success(resp);
         } catch (IllegalArgumentException e) {
             return badRequest(e.getMessage());
@@ -359,7 +359,7 @@ public final class BohrApiImpl implements BohrApi {
 
             GetBlockResponse resp = new GetBlockResponse();
             resp.setResult(
-                    TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber())));
+                    TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber()), kernel.getBlockchain().getBurnTransaction(block.getNumber())));
             return success(resp);
         } catch (IllegalArgumentException e) {
             return badRequest(e.getMessage());
@@ -416,7 +416,7 @@ public final class BohrApiImpl implements BohrApi {
     public Response getLatestBlock() {
         GetLatestBlockResponse resp = new GetLatestBlockResponse();
         Block block = kernel.getBlockchain().getLatestBlock();
-        resp.setResult(TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber())));
+        resp.setResult(TypeFactory.blockType(block, kernel.getBlockchain().getCoinbaseTransaction(block.getNumber()), kernel.getBlockchain().getRewardTransaction(block.getNumber()), kernel.getBlockchain().getBurnTransaction(block.getNumber())));
 
         return success(resp);
     }

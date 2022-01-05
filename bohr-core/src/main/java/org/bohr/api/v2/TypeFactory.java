@@ -39,13 +39,16 @@ public class TypeFactory {
                 .pendingTransactionCount(pendingTransactionCount);
     }
 
-    public static BlockType blockType(Block block, Transaction coinbaseTransaction,Transaction rewardTransaction) {
+    public static BlockType blockType(Block block, Transaction coinbaseTransaction,Transaction rewardTransaction,Transaction burnTransaction) {
         List<Transaction> txs = block.getTransactions();
         if (coinbaseTransaction != null) {
             txs.add(0, coinbaseTransaction);
         }
         if (rewardTransaction != null) {
             txs.add(1, rewardTransaction);
+        }
+        if (burnTransaction != null) {
+            txs.add(2, burnTransaction);
         }
         return new BlockType()
                 .hash(Hex.encode0x(block.getHash()))

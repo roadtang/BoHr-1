@@ -88,7 +88,7 @@ public abstract class AbstractConfig implements Config, ChainSpec {
             MessageCode.BFT_PROPOSAL,
             MessageCode.BFT_VOTE));
     protected List<String> netDnsSeedsMainNet = Collections
-            .unmodifiableList(Arrays.asList("mainnet.bohrweb.org"));
+            .unmodifiableList(Arrays.asList("mainnet.bohrweb.org","mainnet.bohrarmy.com"));
     protected List<String> netDnsSeedsTestNet = Collections
             .unmodifiableList(Arrays.asList("testnet.bohrweb.org"));
 
@@ -217,26 +217,10 @@ public abstract class AbstractConfig implements Config, ChainSpec {
         } else {
             if (number <= 5635000) {
                 return Amount.of(7407, MILLI_BOHR);
-            } else if (number <= 11270000) {
+            } else if (number < 6500000) {
                 return Amount.of(3704, MILLI_BOHR);
-            } else if (number <= 16905000) {
-                return Amount.of(1852, MILLI_BOHR);
-            } else if (number <= 22540000) {
-                return Amount.of(926, MILLI_BOHR);
-            } else if (number <= 28175000) {
-                return Amount.of(463, MILLI_BOHR);
-            } else if (number <= 33810000) {
-                return Amount.of(231, MILLI_BOHR);
-            } else if (number <= 39445000) {
-                return Amount.of(116, MILLI_BOHR);
-            } else if (number <= 45080000) {
-                return Amount.of(58, MILLI_BOHR);
-            } else if (number <= 55016500) {
-                return Amount.of(29, MILLI_BOHR);
-            } else if (number <= 58963500) {
-                return Amount.of(14, MILLI_BOHR);
             } else {
-                return Amount.of(13, MILLI_BOHR);
+                return Amount.of(100, MILLI_BOHR);
             }
         }
     }
@@ -250,26 +234,10 @@ public abstract class AbstractConfig implements Config, ChainSpec {
             }else {
                 if (number <= 5635000) {
                     return Amount.of(1152000, BOHR);
-                } else if (number <= 11270000) {
+                } else if (number < 6500000) {
                     return Amount.of(576000, BOHR);
-                } else if (number <= 16905000) {
-                    return Amount.of(288000, BOHR);
-                } else if (number <= 22540000) {
-                    return Amount.of(144000, BOHR);
-                } else if (number <= 28175000) {
-                    return Amount.of(72000, BOHR);
-                } else if (number <= 33810000) {
-                    return Amount.of(36000, BOHR);
-                } else if (number <= 39445000) {
-                    return Amount.of(18000, BOHR);
-                } else if (number <= 45080000) {
-                    return Amount.of(9000, BOHR);
-                } else if (number <= 55016500) {
-                    return Amount.of(4500, BOHR);
-                } else if (number <= 58963500) {
-                    return Amount.of(2250, BOHR);
                 } else {
-                    return Amount.of(2059200, MILLI_BOHR);
+                    return Amount.ZERO;
                 }
             }
         } else {
@@ -286,8 +254,10 @@ public abstract class AbstractConfig implements Config, ChainSpec {
     public int getNumberOfValidators(long number) {
         if (number < 1619189) {
             return 6;
-        } else {
+        } else if (number < 6500000) {
             return 51;
+        } else {
+            return 21;
         }
     }
 

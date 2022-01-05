@@ -120,6 +120,15 @@ public interface Blockchain {
     Transaction getRewardTransaction(long blockNumber);
 
     /**
+     * Returns coinbase burn transaction of the block number. This method is required as
+     * Bohr doesn't store coinbase burn transaction in blocks.
+     *
+     * @param blockNumber the block number
+     * @return the coinbase burn transaction
+     */
+    Transaction getBurnTransaction(long blockNumber);
+
+    /**
      * Returns whether the transaction is in the blockchain.
      *
      * @param hash

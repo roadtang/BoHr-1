@@ -802,7 +802,8 @@
                         "UNVOTE",
                         "CREATE",
                         "CALL",
-                        "REWARD"
+                        "REWARD",
+                        "BURN"
                     ]
                 },
                 "from": {

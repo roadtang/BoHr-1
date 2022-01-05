@@ -84,6 +84,7 @@ public class BlockchainImpl implements Blockchain {
     protected static final byte TYPE_BLOCK_NUMBER_BY_HASH = 0x03;
     protected static final byte TYPE_BLOCK_COINBASE_BY_NUMBER = 0x07;
     protected static final byte TYPE_BLOCK_COINBASE_REWARD_BY_NUMBER = 0x09;
+    protected static final byte TYPE_BLOCK_COINBASE_BURN_BY_NUMBER = 0x0a;
     protected static final byte TYPE_TRANSACTION_INDEX_BY_HASH = 0x04;
     protected static final byte TYPE_TRANSACTION_COUNT_BY_ADDRESS = 0x05;
     protected static final byte TYPE_TRANSACTION_HASH_BY_ADDRESS_AND_INDEX = 0x05;
@@ -307,6 +308,20 @@ public class BlockchainImpl implements Blockchain {
     }
 
     @Override
+    public Transaction getBurnTransaction(long blockNumber) {
+        if (blockNumber == 0) {
+            return null;
+        }
+
+        byte[] b = indexDB.get(Bytes.merge(TYPE_BLOCK_COINBASE_BURN_BY_NUMBER, Bytes.of(blockNumber)));
+        if (b == null) {
+            return null;
+        }
+
+        return getTransaction(b);
+    }
+
+    @Override
     public boolean hasTransaction(final byte[] hash) {
         return indexDB.get(Bytes.merge(TYPE_TRANSACTION_INDEX_BY_HASH, hash)) != null;
     }
@@ -332,7 +347,7 @@ public class BlockchainImpl implements Blockchain {
     @Override
     public long getTransactionBlockNumber(byte[] hash) {
         Transaction tx = getTransaction(hash);
-        if (tx.getType() == TransactionType.COINBASE) {
+        if (tx.getType() == TransactionType.COINBASE || tx.getType() == TransactionType.REWARD || tx.getType() == TransactionType.BURN) {
             return tx.getNonce();
         }
 
@@ -423,6 +438,24 @@ public class BlockchainImpl implements Blockchain {
                 indexDB.put(Bytes.merge(TYPE_TRANSACTION_INDEX_BY_HASH, dailyRewardTx.getHash()), dailyRewardTx.toBytes());
                 indexDB.put(Bytes.merge(TYPE_BLOCK_COINBASE_REWARD_BY_NUMBER, Bytes.of(block.getNumber())), dailyRewardTx.getHash());
                 addTransactionToAccount(dailyRewardTx, Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS);
+            }
+
+            //[5]-2 fee burn
+            Amount feeReward = Block.getBlockFee(block, config);
+            if (feeReward.isPositive()) {
+                Transaction feeBurnTx = new Transaction(config.network(),
+                        TransactionType.BURN,
+                        Constants.DELEGATE_BURN_ADDRESS,
+                        feeReward,
+                        Amount.ZERO,
+                        block.getNumber(),
+                        block.getTimestamp(),
+                        Bytes.EMPTY_BYTES);
+
+                feeBurnTx.sign(Constants.COINBASE_KEY);
+                indexDB.put(Bytes.merge(TYPE_TRANSACTION_INDEX_BY_HASH, feeBurnTx.getHash()), feeBurnTx.toBytes());
+                indexDB.put(Bytes.merge(TYPE_BLOCK_COINBASE_BURN_BY_NUMBER, Bytes.of(block.getNumber())), feeBurnTx.getHash());
+                addTransactionToAccount(feeBurnTx, Constants.DELEGATE_BURN_ADDRESS);
             }
 
             // [6] update validator statistics
@@ -896,6 +929,12 @@ public class BlockchainImpl implements Blockchain {
         Amount dailyReward = Block.getDailyReward(block, config);
         if (dailyReward.isPositive()) {
             asTrack.adjustAvailable(Constants.BOHR_GAME_REWARD_GENERATE_ADDRESS, dailyReward);
+        }
+
+        // [6]-2 apply tx fee burn
+        Amount feeReward = Block.getBlockFee(block, config);
+        if (feeReward.isPositive()) {
+            asTrack.adjustAvailable(Constants.DELEGATE_BURN_ADDRESS, feeReward);
         }
 
         // [7] commit the updates

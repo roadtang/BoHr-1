@@ -46,7 +46,12 @@ public enum TransactionType {
     /**
      * (0x07) reward .
      */
-    REWARD(0x07);
+    REWARD(0x07),
+
+    /**
+     * (0x08) burn .
+     */
+    BURN(0x08);
 
     private static final TransactionType[] map = new TransactionType[256];
     static {

@@ -50,7 +50,7 @@ public class Transaction {
 
     /**
      * Create a new transaction.
-     * 
+     *
      * @param network
      * @param type
      * @param to
@@ -176,7 +176,7 @@ public class Transaction {
                 // The coinbase key is publicly available. People can use it for transactions.
                 // It won't introduce any fundamental loss to the system but could potentially
                 // cause confusion for block explorer, and thus are prohibited.
-                && (type == TransactionType.COINBASE
+                && (type == TransactionType.COINBASE || type == TransactionType.REWARD || type == TransactionType.BURN
                         || (!Arrays.equals(signature.getAddress(), Constants.COINBASE_ADDRESS)
                                 && !Arrays.equals(to, Constants.COINBASE_ADDRESS)));
     }

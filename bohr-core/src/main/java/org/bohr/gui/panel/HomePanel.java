@@ -72,9 +72,9 @@ public class HomePanel extends JPanel implements ActionListener {
 	{
 		NUMBER_OF_TRANSACTIONS=500;
 	}
-	
 
-	private static final EnumSet<TransactionType> FEDERATED_TRANSACTION_TYPES = EnumSet.of(TransactionType.COINBASE,
+
+	private static final EnumSet<TransactionType> FEDERATED_TRANSACTION_TYPES = EnumSet.of(TransactionType.COINBASE, TransactionType.REWARD, TransactionType.BURN,
 			TransactionType.TRANSFER, TransactionType.CALL, TransactionType.CREATE);
 
 	private transient BohrGui gui;
@@ -123,7 +123,7 @@ public class HomePanel extends JPanel implements ActionListener {
 	}
 
 	private JPanel getTopPanel() {
-		
+
 		int width=420+60;
 
 		JPanel panel = LAFUtils.createPanel(new double[] { width, 40, TableLayout.FILL },
